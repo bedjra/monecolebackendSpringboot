@@ -3,106 +3,202 @@ package com.eschoolback.eschool.Entity;
 import com.eschoolback.eschool.enums.NiveauEtude;
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.time.LocalDate;
+
 @Data
 @Entity
 public class Eleve {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long etudiantId;
-    private String matricule;
-    private String nom;
-    private String prenom;
-    private String adresse;
-    private LocalDate dateNaiss;
-    private String lieuNaiss;
-    private String nationnalite;
-    private String sexe;
-    private String etatProvenance;
+    private Long id;
+
+    @Column(nullable = false, unique = true)
+    private String eleveMatricule;
+
+    @Column(nullable = false)
+    private String eleveNom;
+
+    @Column(nullable = false)
+    private String elevePrenom;
+
+    @Column(nullable = false)
+    private String eleveAdresse;
+
+    private LocalDate eleveDateNaiss;
+
+    @Column(nullable = false)
+    private String eleveLieuNais;
+
+
+    @Column(nullable = true)
+    private String eleveNationalite;
+
+
+    @Column(nullable = false)
+    private String eleveSexe;
+
+    @Column(nullable = false)
+    private String eleveEtatProvenance;
+
+    private LocalDate eleveDateIns;
+
+    @Column(nullable = false)
+    private String tuteurNom;
+
+    @Column(nullable = false)
+    private String tuteurPrenom;
+
+    @Column(nullable = false)
+    private String tuteurProfession;
+
+    @Column(nullable = false)
+    private String tuteurAdresse;
+
+    private String tuteurTelDom;
+
+    @Column(nullable = false)
+    private String tuteurCel;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private NiveauEtude niveauEtude;
 
 
-    public Long getEtudiantId() {
-        return etudiantId;
+    public Long getId() {
+        return id;
     }
 
-    public void setEtudiantId(Long etudiantId) {
-        this.etudiantId = etudiantId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getMatricule() {
-        return matricule;
+    public String getEleveMatricule() {
+        return eleveMatricule;
     }
 
-    public void setMatricule(String matricule) {
-        this.matricule = matricule;
+    public void setEleveMatricule(String eleveMatricule) {
+        this.eleveMatricule = eleveMatricule;
     }
 
-    public String getNom() {
-        return nom;
+    public String getEleveNom() {
+        return eleveNom;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
+    public void setEleveNom(String eleveNom) {
+        this.eleveNom = eleveNom;
     }
 
-    public String getPrenom() {
-        return prenom;
+    public String getElevePrenom() {
+        return elevePrenom;
     }
 
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
+    public void setElevePrenom(String elevePrenom) {
+        this.elevePrenom = elevePrenom;
     }
 
-    public String getAdresse() {
-        return adresse;
+    public String getEleveAdresse() {
+        return eleveAdresse;
     }
 
-    public void setAdresse(String adresse) {
-        this.adresse = adresse;
+    public void setEleveAdresse(String eleveAdresse) {
+        this.eleveAdresse = eleveAdresse;
     }
 
-    public LocalDate getDateNaiss() {
-        return dateNaiss;
+    public LocalDate getEleveDateNaiss() {
+        return eleveDateNaiss;
     }
 
-    public void setDateNaiss(LocalDate dateNaiss) {
-        this.dateNaiss = dateNaiss;
+    public void setEleveDateNaiss(LocalDate eleveDateNaiss) {
+        this.eleveDateNaiss = eleveDateNaiss;
     }
 
-    public String getLieuNaiss() {
-        return lieuNaiss;
+    public String getEleveLieuNais() {
+        return eleveLieuNais;
     }
 
-    public void setLieuNaiss(String lieuNaiss) {
-        this.lieuNaiss = lieuNaiss;
+    public void setEleveLieuNais(String eleveLieuNais) {
+        this.eleveLieuNais = eleveLieuNais;
     }
 
-    public String getNationnalite() {
-        return nationnalite;
+    public String getEleveNationalite() {
+        return eleveNationalite;
     }
 
-    public void setNationnalite(String nationnalite) {
-        this.nationnalite = nationnalite;
+    public void setEleveNationalite(String eleveNationalite) {
+        this.eleveNationalite = eleveNationalite;
     }
 
-    public String getSexe() {
-        return sexe;
+    public String getEleveSexe() {
+        return eleveSexe;
     }
 
-    public void setSexe(String sexe) {
-        this.sexe = sexe;
+    public void setEleveSexe(String eleveSexe) {
+        this.eleveSexe = eleveSexe;
     }
 
-    public String getEtatProvenance() {
-        return etatProvenance;
+    public String getEleveEtatProvenance() {
+        return eleveEtatProvenance;
     }
 
-    public void setEtatProvenance(String etatProvenance) {
-        this.etatProvenance = etatProvenance;
+    public void setEleveEtatProvenance(String eleveEtatProvenance) {
+        this.eleveEtatProvenance = eleveEtatProvenance;
+    }
+
+    public LocalDate getEleveDateIns() {
+        return eleveDateIns;
+    }
+
+    public void setEleveDateIns(LocalDate eleveDateIns) {
+        this.eleveDateIns = eleveDateIns;
+    }
+
+    public String getTuteurNom() {
+        return tuteurNom;
+    }
+
+    public void setTuteurNom(String tuteurNom) {
+        this.tuteurNom = tuteurNom;
+    }
+
+    public String getTuteurPrenom() {
+        return tuteurPrenom;
+    }
+
+    public void setTuteurPrenom(String tuteurPrenom) {
+        this.tuteurPrenom = tuteurPrenom;
+    }
+
+    public String getTuteurProfession() {
+        return tuteurProfession;
+    }
+
+    public void setTuteurProfession(String tuteurProfession) {
+        this.tuteurProfession = tuteurProfession;
+    }
+
+    public String getTuteurAdresse() {
+        return tuteurAdresse;
+    }
+
+    public void setTuteurAdresse(String tuteurAdresse) {
+        this.tuteurAdresse = tuteurAdresse;
+    }
+
+    public String getTuteurTelDom() {
+        return tuteurTelDom;
+    }
+
+    public void setTuteurTelDom(String tuteurTelDom) {
+        this.tuteurTelDom = tuteurTelDom;
+    }
+
+    public String getTuteurCel() {
+        return tuteurCel;
+    }
+
+    public void setTuteurCel(String tuteurCel) {
+        this.tuteurCel = tuteurCel;
     }
 
     public NiveauEtude getNiveauEtude() {

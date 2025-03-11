@@ -7,6 +7,9 @@ import com.eschoolback.eschool.service.EleveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.List;
+
 @RestController
 @RequestMapping("/eleve")
 public class EleveController {
@@ -14,8 +17,16 @@ public class EleveController {
     @Autowired
     private EleveService eleveService;
 
-    @PostMapping("/save")
-    public Eleve saveEleve(@RequestBody Eleve eleve, @RequestParam NiveauEtude niveauEtude) {
-        return eleveService.saveEleve(eleve, niveauEtude);
+    @GetMapping("/niveau")
+    public List<NiveauEtude> getAllNiveauxEtude() {
+        return Arrays.asList(NiveauEtude.values());
     }
+
+    @PostMapping("/save")
+    public Eleve saveEleve(@RequestBody Eleve eleve) {
+        return eleveService.saveEleve(eleve);
+    }
+
+
+
 }
