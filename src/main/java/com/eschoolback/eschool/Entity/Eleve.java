@@ -1,6 +1,7 @@
 package com.eschoolback.eschool.Entity;
 
 import com.eschoolback.eschool.enums.NiveauEtude;
+import com.eschoolback.eschool.enums.Specialite;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDate;
@@ -30,11 +31,6 @@ public class Eleve {
     @Column(nullable = false)
     private String eleveLieuNais;
 
-
-    @Column(nullable = true)
-    private String eleveNationalite;
-
-
     @Column(nullable = false)
     private String eleveSexe;
 
@@ -63,6 +59,10 @@ public class Eleve {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private NiveauEtude niveauEtude;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Specialite specialite;
 
 
     public Long getId() {
@@ -119,14 +119,6 @@ public class Eleve {
 
     public void setEleveLieuNais(String eleveLieuNais) {
         this.eleveLieuNais = eleveLieuNais;
-    }
-
-    public String getEleveNationalite() {
-        return eleveNationalite;
-    }
-
-    public void setEleveNationalite(String eleveNationalite) {
-        this.eleveNationalite = eleveNationalite;
     }
 
     public String getEleveSexe() {
@@ -207,5 +199,13 @@ public class Eleve {
 
     public void setNiveauEtude(NiveauEtude niveauEtude) {
         this.niveauEtude = niveauEtude;
+    }
+
+    public Specialite getSpecialite() {
+        return specialite;
+    }
+
+    public void setSpecialite(Specialite specialite) {
+        this.specialite = specialite;
     }
 }

@@ -3,19 +3,24 @@ package com.eschoolback.eschool.service;
 
 import com.eschoolback.eschool.Entity.Eleve;
 import com.eschoolback.eschool.enums.NiveauEtude;
+import com.eschoolback.eschool.enums.Specialite;
 import com.eschoolback.eschool.repository.EleveRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EleveService {
 
     @Autowired
     private EleveRepository eleveRepository;
+
+
 
     public Eleve saveEleve(Eleve eleve) {
         // Vérifier si un élève avec le même nom et prénom existe déjà
@@ -30,10 +35,6 @@ public class EleveService {
         // Générer le matricule
         String matricule = generateMatricule(eleve);
         eleve.setEleveMatricule(matricule);
-
-        if (eleve.getEleveNationalite() == null) {
-            eleve.setEleveNationalite("Non spécifiée");
-        }
 
         // Sauvegarde en base de données
         return eleveRepository.save(eleve);
@@ -74,6 +75,48 @@ public class EleveService {
 
         // Construire le matricule
         return "MAT_" + niveauCode + "_" + ordre;
+    }
+
+    public Eleve updatEleve(String matricule, Eleve updatedEleve) {
+        // Vérifier si l'élève avec le matricule donné existe
+        Optional<Eleve> existingEleveOpt = eleveRepository.findByEleveMatricule(matricule);
+
+        if (!existingEleveOpt.isPresent()) {
+            throw new RuntimeException("Aucun élève trouvé avec le matricule : " + matricule);
+        }
+
+        Eleve existingEleve = existingEleveOpt.get();
+
+        // Mise à jour des informations
+        existingEleve.setEleveNom(updatedEleve.getEleveNom());
+        existingEleve.setElevePrenom(updatedEleve.getElevePrenom());
+        existingEleve.setNiveauEtude(updatedEleve.getNiveauEtude());
+
+        // Générer un nouveau matricule à chaque mise à jour
+        String newMatricule = generateMatricule(existingEleve);
+        System.out.println("Nouveau matricule généré : " + newMatricule);
+
+        existingEleve.setEleveMatricule(newMatricule);
+
+        // Sauvegarde des modifications
+        return eleveRepository.save(existingEleve);
+    }
+
+
+    /////////////GET ETUDIANT ALL ///////////////////////////
+    public List<Eleve> getAllEleves() {
+        return eleveRepository.findAll();
+    }
+
+    /////////////GET ETUDIANT BY NIVEU ETUDE ///////////////////////////
+    public List<Eleve> getAllByNiveauEtude(NiveauEtude niveauEtude) {
+        return eleveRepository.findByNiveauEtude(niveauEtude);
+    }
+
+    /////////////GET ETUDIANT BY MATRICULE ///////////////////////////
+    public Eleve getEleveById(Long id) {
+        return eleveRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Aucun élève trouvé avec l'ID : " + id));
     }
 
 }

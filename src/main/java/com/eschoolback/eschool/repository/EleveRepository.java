@@ -10,5 +10,6 @@ import java.util.Optional;
 public interface EleveRepository extends JpaRepository<Eleve, Long> {
     List<Eleve> findByNiveauEtude(NiveauEtude niveauEtude);
     Optional<Eleve> findByEleveNomAndElevePrenom(String eleveNom, String elevePrenom);
+    Optional<Eleve> findByEleveMatricule(String matricule);
 
 }
