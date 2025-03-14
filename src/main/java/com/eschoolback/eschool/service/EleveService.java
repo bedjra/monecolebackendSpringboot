@@ -1,18 +1,22 @@
 package com.eschoolback.eschool.service;
 
 
+import com.eschoolback.eschool.Dto.StatistiquesDTO;
 import com.eschoolback.eschool.Entity.Eleve;
 import com.eschoolback.eschool.enums.NiveauEtude;
 import com.eschoolback.eschool.enums.Specialite;
 import com.eschoolback.eschool.repository.EleveRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class EleveService {
@@ -32,6 +36,11 @@ public class EleveService {
             throw new RuntimeException("Un élève avec le même nom et prénom existe déjà.");
         }
 
+        // Vérifier que la spécialité est définie
+        if (eleve.getSpecialite() == null) {
+            throw new IllegalArgumentException("La spécialité de l'élève ne peut pas être nulle.");
+        }
+
         // Générer le matricule
         String matricule = generateMatricule(eleve);
         eleve.setEleveMatricule(matricule);
@@ -41,67 +50,66 @@ public class EleveService {
     }
 
     private String generateMatricule(Eleve eleve) {
-        // Mapper le niveau d'étude en abréviation
+        // 1️⃣ Mapper le niveau d’étude en abréviation
         String niveauCode;
         switch (eleve.getNiveauEtude()) {
-            case Seconde:
-                niveauCode = "SEC";
-                break;
-            case Premiere:
-                niveauCode = "PRE";
-                break;
-            case Terminal:
-                niveauCode = "TLE";
-                break;
-            default:
-                throw new IllegalArgumentException("Niveau d'étude inconnu : " + eleve.getNiveauEtude());
+            case Seconde: niveauCode = "SEC"; break;
+            case Premiere: niveauCode = "PRE"; break;
+            case Terminal: niveauCode = "TLE"; break;
+            default: throw new IllegalArgumentException("Niveau inconnu : " + eleve.getNiveauEtude());
         }
 
-        // Récupérer tous les élèves du même niveau
-        List<Eleve> eleves = eleveRepository.findByNiveauEtude(eleve.getNiveauEtude());
+        // 2️⃣ Récupérer le code de la spécialité
+        String specialiteCode = eleve.getSpecialite().name(); // Déjà sous forme de texte (A4, D, G1, G2, G3)
 
-        // Trier les élèves par ordre alphabétique (nom puis prénom)
-        eleves.sort(Comparator.comparing(Eleve::getEleveNom)
-                .thenComparing(Eleve::getElevePrenom));
+        // 3️⃣ Récupérer le nombre d’élèves existants dans CE niveau et CETTE spécialité
+        long count = eleveRepository.countByNiveauEtudeAndSpecialite(eleve.getNiveauEtude(), eleve.getSpecialite());
 
-        // Déterminer la position actuelle de l'élève dans la liste triée
-        int ordre = 1;
-        for (Eleve e : eleves) {
-            if (e.getEleveNom().compareToIgnoreCase(eleve.getEleveNom()) > 0) {
-                break;
+        // 4️⃣ Construire le matricule sous le format "SEC-A4-001"
+        return niveauCode + "-" + specialiteCode + "-" + String.format("%03d", count + 1);
+    }
+
+
+    public Eleve updateEleveByMatricule(String matricule, Eleve updatedEleve) {
+        Optional<Eleve> existingEleve = eleveRepository.findByEleveMatricule(matricule);
+
+        if (existingEleve.isPresent()) {
+            Eleve eleve = existingEleve.get();
+
+            // Vérifier si le niveau ou la spécialité a changé
+            boolean niveauChanged = !eleve.getNiveauEtude().equals(updatedEleve.getNiveauEtude());
+            boolean specialiteChanged = !eleve.getSpecialite().equals(updatedEleve.getSpecialite());
+
+            // Mettre à jour les informations de l'élève
+            eleve.setEleveNom(updatedEleve.getEleveNom());
+            eleve.setElevePrenom(updatedEleve.getElevePrenom());
+            eleve.setEleveAdresse(updatedEleve.getEleveAdresse());
+            eleve.setEleveSexe(updatedEleve.getEleveSexe());
+            eleve.setEleveDateNaiss(updatedEleve.getEleveDateNaiss());
+            eleve.setEleveEtatProvenance(updatedEleve.getEleveEtatProvenance());
+            eleve.setEleveLieuNais(updatedEleve.getEleveLieuNais());
+
+            eleve.setNiveauEtude(updatedEleve.getNiveauEtude());
+            eleve.setSpecialite(updatedEleve.getSpecialite());
+
+            // Régénérer le matricule si nécessaire
+            if (niveauChanged || specialiteChanged) {
+                String newMatricule = generateMatricule(eleve);
+                eleve.setEleveMatricule(newMatricule);
             }
-            ordre++;
-        }
 
-        // Construire le matricule
-        return "MAT_" + niveauCode + "_" + ordre;
+            // Sauvegarder les modifications
+            return eleveRepository.save(eleve);
+        } else {
+            throw new RuntimeException("Élève introuvable avec le matricule : " + matricule);
+        }
     }
 
-    public Eleve updatEleve(String matricule, Eleve updatedEleve) {
-        // Vérifier si l'élève avec le matricule donné existe
-        Optional<Eleve> existingEleveOpt = eleveRepository.findByEleveMatricule(matricule);
-
-        if (!existingEleveOpt.isPresent()) {
-            throw new RuntimeException("Aucun élève trouvé avec le matricule : " + matricule);
-        }
-
-        Eleve existingEleve = existingEleveOpt.get();
-
-        // Mise à jour des informations
-        existingEleve.setEleveNom(updatedEleve.getEleveNom());
-        existingEleve.setElevePrenom(updatedEleve.getElevePrenom());
-        existingEleve.setNiveauEtude(updatedEleve.getNiveauEtude());
-
-        // Générer un nouveau matricule à chaque mise à jour
-        String newMatricule = generateMatricule(existingEleve);
-        System.out.println("Nouveau matricule généré : " + newMatricule);
-
-        existingEleve.setEleveMatricule(newMatricule);
-
-        // Sauvegarde des modifications
-        return eleveRepository.save(existingEleve);
+    /////////////aide au put au fontend  ///////////////////////////
+    public Long getIdByMatricule(String matricule) {
+        Optional<Eleve> eleve = eleveRepository.findByEleveMatricule(matricule);
+        return (eleve.isPresent()) ? eleve.get().getId() : null;  // 👈 Maintenant, c'est un Long
     }
-
 
     /////////////GET ETUDIANT ALL ///////////////////////////
     public List<Eleve> getAllEleves() {
@@ -113,10 +121,56 @@ public class EleveService {
         return eleveRepository.findByNiveauEtude(niveauEtude);
     }
 
+
+
+    /////////////GET BY NIVEU ETUDE et SPECIALITE ///////////////////////////
+    public List<Eleve> getElevesByNiveauEtSpecialite(NiveauEtude niveauEtude, Specialite specialite) {
+        return eleveRepository.findByNiveauEtudeAndSpecialite(niveauEtude, specialite);
+    }
+
     /////////////GET ETUDIANT BY MATRICULE ///////////////////////////
     public Eleve getEleveById(Long id) {
         return eleveRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Aucun élève trouvé avec l'ID : " + id));
     }
+
+
+    public Optional<Eleve> getEleveByNomAndPrenom(String nom, String prenom) {
+        return eleveRepository.findByEleveNomAndElevePrenom(nom, prenom);
+    }
+
+
+//    public List<StatistiquesDTO> getStatistiquesParNiveau() {
+//        List<Object[]> result = eleveRepository.getStatistiquesParNiveau();
+//        List<StatistiquesDTO> statistiques = new ArrayList<>();
+//
+//        for (Object[] row : result) {
+//            NiveauEtude niveauEtude = (NiveauEtude) row[0];
+//            Long nbTotalEleves = (Long) row[1];
+//            Long nbFilles = (Long) row[2];
+//            Long nbGarcons = (Long) row[3];
+//            statistiques.add(new StatistiquesDTO(niveauEtude, nbTotalEleves, nbFilles, nbGarcons));
+//        }
+//
+//        return statistiques;
+//    }
+//
+    public List<StatistiquesDTO> getStatistiquesParNiveau() {
+        // Récupérer les résultats de la requête
+        List<Object[]> result = eleveRepository.getStatistiquesParNiveau();
+        List<StatistiquesDTO> statistiques = new ArrayList<>();
+
+        // Transformation des résultats en DTO
+        for (Object[] row : result) {
+            NiveauEtude niveauEtude = (NiveauEtude) row[0];
+            Long nbTotalEleves = (Long) row[1];
+            Long nbFilles = (Long) row[2];
+            Long nbGarcons = (Long) row[3];
+            statistiques.add(new StatistiquesDTO(niveauEtude, nbTotalEleves, nbFilles, nbGarcons));
+        }
+
+        return statistiques;
+    }
+
 
 }

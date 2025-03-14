@@ -1,6 +1,7 @@
 package com.eschoolback.eschool.Controller;
 
 
+import com.eschoolback.eschool.Dto.StatistiquesDTO;
 import com.eschoolback.eschool.Entity.Eleve;
 import com.eschoolback.eschool.enums.NiveauEtude;
 import com.eschoolback.eschool.enums.Specialite;
@@ -47,18 +48,30 @@ public class EleveController {
     }
 
     // PUT: Mettre à jour un élève par son matricule
-
     @PutMapping("/{matricule}")
-    public ResponseEntity<Eleve> updateEleve(@PathVariable String matricule, @Valid @RequestBody Eleve updatedEleve) {
+    public ResponseEntity<Eleve> updateEleveByMatricule(
+            @PathVariable String matricule,
+            @RequestBody Eleve updatedEleve) {
         try {
-            // Appel au service pour mettre à jour l'élève
-            Eleve updatedStudent = eleveService.updatEleve(matricule, updatedEleve);
-            return new ResponseEntity<>(updatedStudent, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            // Si l'élève avec ce matricule n'est pas trouvé, retourner une erreur 404
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            Eleve updated = eleveService.updateEleveByMatricule(matricule, updatedEleve);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException ex) {
+            return ResponseEntity.notFound().build();
         }
     }
+
+    /////////////aide au put au fontend  ///////////////////////////
+    @GetMapping("/getIdByMatricule/{matricule}")
+    public ResponseEntity<Long> getIdByMatricule(@PathVariable String matricule) {
+        Long id = eleveService.getIdByMatricule(matricule);
+        if (id != null) {
+            return ResponseEntity.ok(id);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+
 
     /////////////GET ETUDIANT   ALL  ///////////////////////////
     @GetMapping
@@ -66,6 +79,7 @@ public class EleveController {
         List<Eleve> eleves = eleveService.getAllEleves();
         return new ResponseEntity<>(eleves, HttpStatus.OK);
     }
+
 
     /////////////GET ETUDIANT BY NIVEU ETUDE ///////////////////////////
     @GetMapping("/{niveauEtude}")
@@ -75,6 +89,14 @@ public class EleveController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Pas d'élèves pour ce niveau
         }
         return new ResponseEntity<>(eleves, HttpStatus.OK);
+    }
+
+    /////////////GET BY NIVEU ETUDE et SPECIALITE ///////////////////////////
+    @GetMapping("/niv/{niveauEtude}/spec/{specialite}")
+    public List<Eleve> getElevesByNiveauEtSpecialite(
+            @PathVariable NiveauEtude niveauEtude,  // Utilisation de l'énumération NiveauEtude
+            @PathVariable Specialite specialite) {  // Utilisation de l'énumération Specialite
+        return eleveService.getElevesByNiveauEtSpecialite(niveauEtude, specialite);
     }
 
     /////////////GET ETUDIANT BY MATRICULE ///////////////////////////
@@ -87,4 +109,20 @@ public class EleveController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
+
+
+    @GetMapping("/getby")
+    public Optional<Eleve> getEleveByNomAndPrenom(@RequestParam String nom, @RequestParam String prenom) {
+        return eleveService.getEleveByNomAndPrenom(nom, prenom);
+    }
+
+    @GetMapping("/stat")
+    public List<StatistiquesDTO> getStatistiques() {
+        return eleveService.getStatistiquesParNiveau();
+    }
+
+
+
+
 }
