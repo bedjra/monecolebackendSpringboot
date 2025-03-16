@@ -26,6 +26,12 @@ public class UtilisateurController {
         return Arrays.asList(Role.values());
     }
 
+    @GetMapping("/utilisateur")
+    public List<Utilisateur> getAllUtilisateur() {
+        return utilisateurService.getAll();
+    }
+
+
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody Utilisateur utilisateur) {
         System.out.println("Email: " + utilisateur.getEmail() + ", Password: " + utilisateur.getPassword() + ", Role: " + utilisateur.getRole());

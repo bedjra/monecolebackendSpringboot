@@ -1,10 +1,13 @@
 package com.eschoolback.eschool.service;
 
+import com.eschoolback.eschool.Entity.Scolarite;
 import com.eschoolback.eschool.Entity.Utilisateur;
 import com.eschoolback.eschool.enums.Role;
 import com.eschoolback.eschool.repository.UtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UtilisateurService {
@@ -29,4 +32,7 @@ public class UtilisateurService {
         return null;
     }
 
+    public List<Utilisateur> getAll() {
+        return utilisateurRepository.findAll();
+    }
 }

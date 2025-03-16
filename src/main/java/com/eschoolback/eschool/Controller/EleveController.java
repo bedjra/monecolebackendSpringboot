@@ -3,10 +3,12 @@ package com.eschoolback.eschool.Controller;
 
 import com.eschoolback.eschool.Dto.StatistiquesDTO;
 import com.eschoolback.eschool.Entity.Eleve;
+import com.eschoolback.eschool.Entity.Scolarite;
 import com.eschoolback.eschool.enums.NiveauEtude;
 import com.eschoolback.eschool.enums.Specialite;
 import com.eschoolback.eschool.repository.EleveRepository;
 import com.eschoolback.eschool.service.EleveService;
+import com.eschoolback.eschool.service.ScolariteService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,8 +27,19 @@ public class EleveController {
     @Autowired
     private EleveService eleveService;
 
+
     @Autowired
-    private EleveRepository eleveRepository;
+    private ScolariteService scolariteService;
+
+    @GetMapping("/scolarite")
+    public List<Scolarite> getAllScolarites() {
+        return scolariteService.getAll();
+    }
+
+    @PostMapping("/scolarite")
+    public Scolarite createScolarite(@RequestBody Scolarite scolarite) {
+        return scolariteService.save(scolarite);
+    }
 
     @GetMapping("/niveau")
     public List<NiveauEtude> getAllNiveauxEtude() {
