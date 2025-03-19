@@ -15,8 +15,5 @@ public class PaiementController {
     @Autowired
     private PaiementService paiementService;
 
-    @GetMapping
-    public List<Eleve> getElevesEtLeursScolarites() {
-        return paiementService.getElevesEtLeursScolarites();
-    }
+    
 }
