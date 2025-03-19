@@ -5,6 +5,7 @@ import com.eschoolback.eschool.enums.Specialite;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Entity
@@ -63,6 +64,12 @@ public class Eleve {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Specialite specialite;
+
+
+
+    @OneToMany(mappedBy = "eleve", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Paiement> paiement;
+
 
 
     public Long getId() {
