@@ -17,12 +17,4 @@ public class PaiementService {
 
 
 
-    public List<Eleve> getElevesEtLeursScolarites() {
-        List<Paiement> paiements = paiementRepository.findAll();
-        return paiements.stream()
-                .map(Paiement::getEleve)
-                .distinct()
-                .collect(Collectors.toList());
-    }
-
 }

@@ -15,5 +15,5 @@ public class PaiementController {
     @Autowired
     private PaiementService paiementService;
 
-    
+
 }
