@@ -3,7 +3,6 @@ package com.eschoolback.eschool.Dto;
 import com.eschoolback.eschool.Entity.Scolarite;
 import com.eschoolback.eschool.enums.NiveauEtude;
 import com.eschoolback.eschool.enums.Specialite;
-import com.eschoolback.eschool.enums.StatutScolarite;
 
 import java.time.LocalDate;
 
@@ -17,10 +16,27 @@ public class PaiementDto {
     private NiveauEtude niveauEtude;
     private Scolarite scolarite;
     private LocalDate datePaiement;
-    private StatutScolarite StatutScolarite ;
     private long montantActuel;
     private long resteEcolage;
     private long montantAChanger;
+    private long montantDejaPaye;
+
+
+    public PaiementDto(Long eleveId, String eleveNom, String elevePrenom, String eleveMatricule,
+                       Specialite specialite, NiveauEtude niveauEtude, Scolarite scolarite,
+                       LocalDate datePaiement, long montantActuel, long resteEcolage, long montantAChanger) {
+        this.eleveId = eleveId;
+        this.eleveNom = eleveNom;
+        this.elevePrenom = elevePrenom;
+        this.eleveMatricule = eleveMatricule;
+        this.specialite = specialite;
+        this.niveauEtude = niveauEtude;
+        this.scolarite = scolarite;
+        this.datePaiement = datePaiement;
+        this.montantActuel = montantActuel;
+        this.resteEcolage = resteEcolage;
+        this.montantAChanger = montantAChanger;
+    }
 
 
     public Long getEleveId() {
@@ -87,14 +103,6 @@ public class PaiementDto {
         this.datePaiement = datePaiement;
     }
 
-    public com.eschoolback.eschool.enums.StatutScolarite getStatutScolarite() {
-        return StatutScolarite;
-    }
-
-    public void setStatutScolarite(com.eschoolback.eschool.enums.StatutScolarite statutScolarite) {
-        StatutScolarite = statutScolarite;
-    }
-
     public long getMontantActuel() {
         return montantActuel;
     }
@@ -117,5 +125,13 @@ public class PaiementDto {
 
     public void setMontantAChanger(long montantAChanger) {
         this.montantAChanger = montantAChanger;
+    }
+
+    public long getMontantDejaPaye() {
+        return montantDejaPaye;
+    }
+
+    public void setMontantDejaPaye(long montantDejaPaye) {
+        this.montantDejaPaye = montantDejaPaye;
     }
 }

@@ -2,7 +2,6 @@ package com.eschoolback.eschool.Entity;
 
 import com.eschoolback.eschool.enums.NiveauEtude;
 import com.eschoolback.eschool.enums.Specialite;
-import com.eschoolback.eschool.enums.StatutScolarite;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,9 +15,9 @@ public class Paiement {
     private Long id;
 
     private LocalDate datePaiement;
-    private long resteEcolage;
-    private long montantDejaPaye;
-    private long montantActuel;
+    private Double resteEcolage;
+    private Double montantDejaPaye;
+    private Double montantActuel;
 
 
     @ManyToOne
@@ -36,8 +35,7 @@ public class Paiement {
     @Enumerated(EnumType.STRING)
     private Specialite specialite;
 
-    @Enumerated(EnumType.STRING)
-    private StatutScolarite statutScolarite;
+
 
     public Long getId() {
         return id;
@@ -55,27 +53,27 @@ public class Paiement {
         this.datePaiement = datePaiement;
     }
 
-    public long getResteEcolage() {
+    public Double getResteEcolage() {
         return resteEcolage;
     }
 
-    public void setResteEcolage(long resteEcolage) {
+    public void setResteEcolage(Double resteEcolage) {
         this.resteEcolage = resteEcolage;
     }
 
-    public long getMontantDejaPaye() {
+    public Double getMontantDejaPaye() {
         return montantDejaPaye;
     }
 
-    public void setMontantDejaPaye(long montantDejaPaye) {
+    public void setMontantDejaPaye(Double montantDejaPaye) {
         this.montantDejaPaye = montantDejaPaye;
     }
 
-    public long getMontantActuel() {
+    public Double getMontantActuel() {
         return montantActuel;
     }
 
-    public void setMontantActuel(long montantActuel) {
+    public void setMontantActuel(Double montantActuel) {
         this.montantActuel = montantActuel;
     }
 
@@ -111,11 +109,5 @@ public class Paiement {
         this.specialite = specialite;
     }
 
-    public StatutScolarite getStatutScolarite() {
-        return statutScolarite;
-    }
 
-    public void setStatutScolarite(StatutScolarite statutScolarite) {
-        this.statutScolarite = statutScolarite;
-    }
 }

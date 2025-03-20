@@ -1,76 +1,55 @@
-package com.eschoolback.eschool.Entity;
+package com.eschoolback.eschool.Dto;
 
 import com.eschoolback.eschool.enums.NiveauEtude;
 import com.eschoolback.eschool.enums.Specialite;
-import jakarta.persistence.*;
-import lombok.Data;
 import java.time.LocalDate;
-import java.util.List;
 
-@Data
-@Entity
-public class Eleve {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class EleveDto {
     private Long id;
-
-    @Column(nullable = false, unique = true)
     private String eleveMatricule;
-
-    @Column(nullable = false)
     private String eleveNom;
-
-    @Column(nullable = false)
     private String elevePrenom;
-
-    @Column(nullable = false)
     private String eleveAdresse;
-
     private LocalDate eleveDateNaiss;
-
-    @Column(nullable = false)
     private String eleveLieuNais;
-
-    @Column(nullable = false)
     private String eleveSexe;
-
-    @Column(nullable = false)
     private String eleveEtatProvenance;
-
     private LocalDate eleveDateIns;
-
-    @Column(nullable = false)
     private String tuteurNom;
-
-    @Column(nullable = false)
     private String tuteurPrenom;
-
-    @Column(nullable = false)
     private String tuteurProfession;
-
-    @Column(nullable = false)
     private String tuteurAdresse;
-
     private String tuteurTelDom;
-
-    @Column(nullable = false)
     private String tuteurCel;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private NiveauEtude niveauEtude;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Specialite specialite;
 
+    public EleveDto(Long id, String eleveMatricule, String eleveNom, String elevePrenom, String eleveAdresse,
+                    LocalDate eleveDateNaiss, String eleveLieuNais, String eleveSexe, String eleveEtatProvenance,
+                    LocalDate eleveDateIns, String tuteurNom, String tuteurPrenom, String tuteurProfession,
+                    String tuteurAdresse, String tuteurTelDom, String tuteurCel, NiveauEtude niveauEtude,
+                    Specialite specialite) {
+        this.id = id;
+        this.eleveMatricule = eleveMatricule;
+        this.eleveNom = eleveNom;
+        this.elevePrenom = elevePrenom;
+        this.eleveAdresse = eleveAdresse;
+        this.eleveDateNaiss = eleveDateNaiss;
+        this.eleveLieuNais = eleveLieuNais;
+        this.eleveSexe = eleveSexe;
+        this.eleveEtatProvenance = eleveEtatProvenance;
+        this.eleveDateIns = eleveDateIns;
+        this.tuteurNom = tuteurNom;
+        this.tuteurPrenom = tuteurPrenom;
+        this.tuteurProfession = tuteurProfession;
+        this.tuteurAdresse = tuteurAdresse;
+        this.tuteurTelDom = tuteurTelDom;
+        this.tuteurCel = tuteurCel;
+        this.niveauEtude = niveauEtude;
+        this.specialite = specialite;
+    }
 
-
-
-    @OneToMany(mappedBy = "eleve", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Paiement> paiement;
-
+    // Getters et setters (ou utilise @Data de Lombok si nécessaire)
 
 
     public Long getId() {
@@ -215,14 +194,5 @@ public class Eleve {
 
     public void setSpecialite(Specialite specialite) {
         this.specialite = specialite;
-    }
-
-
-    public List<Paiement> getPaiement() {
-        return paiement;
-    }
-
-    public void setPaiement(List<Paiement> paiement) {
-        this.paiement = paiement;
     }
 }
