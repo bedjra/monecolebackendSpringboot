@@ -1,7 +1,7 @@
 package com.eschoolback.eschool.enums;
 
 public enum Facultative {
-    EPS("Éducation Physique et Sportive"),
+    EPS("EPS"),
     MUSIQUE("Musique");
 
     private final String displayName;
