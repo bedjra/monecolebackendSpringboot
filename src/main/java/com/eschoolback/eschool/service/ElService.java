@@ -266,22 +266,5 @@
 //
 //
 //
-//    public List<StatistiquesDTO> getStatistiquesParNiveau() {
-//        // Récupérer les résultats de la requête
-//        List<Object[]> result = eleveRepository.getStatistiquesParNiveau();
-//        List<StatistiquesDTO> statistiques = new ArrayList<>();
-//
-//        // Transformation des résultats en DTO
-//        for (Object[] row : result) {
-//            NiveauEtude niveauEtude = (NiveauEtude) row[0];
-//            Long nbTotalEleves = (Long) row[1];
-//            Long nbFilles = (Long) row[2];
-//            Long nbGarcons = (Long) row[3];
-//            statistiques.add(new StatistiquesDTO(niveauEtude, nbTotalEleves, nbFilles, nbGarcons));
-//        }
-//
-//        return statistiques;
-//    }
-//
-//
+
 //}
