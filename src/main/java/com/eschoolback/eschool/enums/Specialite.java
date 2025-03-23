@@ -2,10 +2,10 @@ package com.eschoolback.eschool.enums;
 
 public enum Specialite {
     A4("A4"),
-    D("D"),
-    G1("G1"),
-    G2("G2"),
-    G3("G3");
+    D("D");
+//    G1("G1"),
+//    G2("G2"),
+//    G3("G3");
 
     private final String libelle;
 

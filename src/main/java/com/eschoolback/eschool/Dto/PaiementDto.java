@@ -18,13 +18,12 @@ public class PaiementDto {
     private LocalDate datePaiement;
     private long montantActuel;
     private long resteEcolage;
-    private long montantAChanger;
     private long montantDejaPaye;
 
 
     public PaiementDto(Long eleveId, String eleveNom, String elevePrenom, String eleveMatricule,
                        Specialite specialite, NiveauEtude niveauEtude, Scolarite scolarite,
-                       LocalDate datePaiement, long montantActuel, long resteEcolage, long montantAChanger) {
+                       LocalDate datePaiement, long montantActuel, long resteEcolage, long montantDejaPaye) {
         this.eleveId = eleveId;
         this.eleveNom = eleveNom;
         this.elevePrenom = elevePrenom;
@@ -35,7 +34,7 @@ public class PaiementDto {
         this.datePaiement = datePaiement;
         this.montantActuel = montantActuel;
         this.resteEcolage = resteEcolage;
-        this.montantAChanger = montantAChanger;
+        this.montantDejaPaye = montantDejaPaye; // ✅ Ajout de ce champ
     }
 
 
@@ -119,13 +118,7 @@ public class PaiementDto {
         this.resteEcolage = resteEcolage;
     }
 
-    public long getMontantAChanger() {
-        return montantAChanger;
-    }
 
-    public void setMontantAChanger(long montantAChanger) {
-        this.montantAChanger = montantAChanger;
-    }
 
     public long getMontantDejaPaye() {
         return montantDejaPaye;

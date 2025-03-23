@@ -60,7 +60,7 @@ public class EleveService {
         }
 
         // 2️⃣ Récupérer le code de la spécialité
-        String specialiteCode = eleve.getSpecialite().name(); // Déjà sous forme de texte (A4, D, G1, G2, G3)
+        String specialiteCode = eleve.getSpecialite().name();
 
         // 3️⃣ Récupérer le nombre d’élèves existants dans CE niveau et CETTE spécialité
         long count = eleveRepository.countByNiveauEtudeAndSpecialite(eleve.getNiveauEtude(), eleve.getSpecialite());

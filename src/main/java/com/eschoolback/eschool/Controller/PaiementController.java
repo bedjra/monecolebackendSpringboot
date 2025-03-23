@@ -6,6 +6,7 @@ import com.eschoolback.eschool.enums.NiveauEtude;
 import com.eschoolback.eschool.enums.Specialite;
 import com.eschoolback.eschool.service.PaiementService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +39,22 @@ public class PaiementController {
             @PathVariable Specialite specialite) {
         List<PaiementDto> paiements = paiementService.getPaiementsByNiveauEtSpecialite(niveau, specialite);
         return ResponseEntity.ok(paiements);
+    }
+
+    @PostMapping
+    public ResponseEntity<PaiementDto> effectuerPaiement(@RequestBody PaiementDto paiementDto) {
+        PaiementDto paiementEffectue = paiementService.effectuerPaiement(paiementDto);
+        return ResponseEntity.ok(paiementEffectue);
+    }
+
+    @GetMapping("/{matricule}")
+    public ResponseEntity<PaiementDto> getPaiementByMatricule(@PathVariable String matricule) {
+        try {
+            PaiementDto paiementDto = paiementService.getPaiementByMatricule(matricule);
+            return ResponseEntity.ok(paiementDto);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
 }
