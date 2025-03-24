@@ -48,7 +48,7 @@ public class TitulaireController {
     }
 
 
-    @PostMapping
+    @PostMapping("/save")
     public ResponseEntity<Titulaire> saveTitulaire(@RequestBody TitulaireRequest titulaireRequest) {
         Titulaire titulaire = new Titulaire();
         titulaire.setNom(titulaireRequest.getProfesseur()); // Correspond au champ professeur dans le frontend
@@ -59,37 +59,10 @@ public class TitulaireController {
         return ResponseEntity.ok(savedTitulaire);
     }
 
+    @GetMapping("/list")
+    public List<Titulaire> getAllTitulaires() {
+        return titulaireService.getAllTitulaires();
+    }
 
-
-    // Assigner un professeur titulaire
-//    @PostMapping
-//    public ResponseEntity<Titulaire> assignerTitulaire(@RequestBody TitulaireRequest request) {
-//        try {
-//            System.out.println("JSON reçu : " + request.getNiveau() + ", " + request.getSpecialite() + ", " + request.getProfesseurnom());
-//
-//            // Convertir les chaînes en enums
-//            NiveauEtude niveau = Arrays.stream(NiveauEtude.values())
-//                    .filter(n -> n.name().equalsIgnoreCase(request.getNiveau()))
-//                    .findFirst()
-//                    .orElseThrow(() -> new IllegalArgumentException("Niveau invalide : " + request.getNiveau()));
-//
-//            Specialite specialite = Arrays.stream(Specialite.values())
-//                    .filter(s -> s.name().equalsIgnoreCase(request.getSpecialite()))
-//                    .findFirst()
-//                    .orElseThrow(() -> new IllegalArgumentException("Spécialité invalide : " + request.getSpecialite()));
-//
-//            // Appeler le service
-//            Titulaire nouveauTitulaire = titulaireService.assignerProfesseurTitulaire(
-//                    request.getProfesseurnom(),
-//                    niveau,
-//                    specialite
-//            );
-//
-//            return ResponseEntity.ok(nouveauTitulaire);
-//
-//        } catch (IllegalArgumentException e) {
-//            return ResponseEntity.badRequest().body(null);
-//        }
-//    }
 
 }

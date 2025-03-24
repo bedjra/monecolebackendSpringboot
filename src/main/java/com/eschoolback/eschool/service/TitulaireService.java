@@ -56,25 +56,9 @@ public class TitulaireService {
         return titulaireRepository.save(titulaire);
     }
 
+    public List<Titulaire> getAllTitulaires() {
+        return titulaireRepository.findAll();
+    }
 
 
-
-    // Récupérer la liste des noms des professeurs
-
-
-    // Assigner un professeur titulaire à un niveau et une spécialité
-//    public Titulaire assignerProfesseurTitulaire(String nomProfesseur, NiveauEtude  niveau,    Specialite specialite) {
-//        // Vérifier si le professeur existe
-//        Professeur professeur = professeurRepository.findByNom(nomProfesseur)
-//                .orElseThrow(() -> new RuntimeException("Professeur non trouvé"));
-//
-//        // Créer un nouveau titulaire
-//        Titulaire titulaire = new Titulaire();
-//        titulaire.setProfesseurTitulaire(professeur);
-//        titulaire.setNiveau(niveau);
-//        titulaire.setSpecialite(specialite);
-//
-//        // Enregistrer dans la base de données
-//        return titulaireRepository.save(titulaire);
-//    }
 }
