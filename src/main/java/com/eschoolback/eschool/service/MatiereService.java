@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MatiereService {
@@ -77,4 +78,13 @@ public class MatiereService {
         }
         return nomsProfesseurs;
     }
+
+
+
+    public List<String> getAllProfesseurNoms() {
+        return professeurRepository.findAll().stream()
+                .map(Professeur::getNom)
+                .collect(Collectors.toList());
+    }
+
 }

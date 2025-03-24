@@ -5,15 +5,11 @@ import com.eschoolback.eschool.enums.Specialite;
 import jakarta.persistence.*;
 
 @Entity
-public class Professeur {
+public class Titulaire {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String nom;
-
-    private String matiere;
 
     @Enumerated(EnumType.STRING)
     private NiveauEtude niveau;
@@ -21,16 +17,12 @@ public class Professeur {
     @Enumerated(EnumType.STRING)
     private Specialite specialite;
 
+    private String nom;
 
-    // Constructeurs
-    public Professeur() {}
 
-    public Professeur(String nom, String matiere) {
-        this.nom = nom;
-        this.matiere = matiere;
-    }
 
-    // Getters et Setters
+    // Constructeurs, Getters et Setters
+
     public Long getId() {
         return id;
     }
@@ -39,19 +31,27 @@ public class Professeur {
         this.id = id;
     }
 
+    public NiveauEtude getNiveau() {
+        return niveau;
+    }
+
+    public void setNiveau(NiveauEtude niveau) {
+        this.niveau = niveau;
+    }
+
+    public Specialite getSpecialite() {
+        return specialite;
+    }
+
+    public void setSpecialite(Specialite specialite) {
+        this.specialite = specialite;
+    }
+
     public String getNom() {
         return nom;
     }
 
     public void setNom(String nom) {
         this.nom = nom;
-    }
-
-    public String getMatiere() {
-        return matiere;
-    }
-
-    public void setMatiere(String matiere) {
-        this.matiere = matiere;
     }
 }

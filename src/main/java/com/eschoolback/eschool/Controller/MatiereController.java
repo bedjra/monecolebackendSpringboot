@@ -68,6 +68,10 @@ public class MatiereController {
         return matieres;
     }
 
+    @GetMapping("/professeurs/noms")
+    public List<String> getAllProfesseurNoms() {
+        return matiereService.getAllProfesseurNoms();
+    }
 
 
 }
