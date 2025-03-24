@@ -71,7 +71,7 @@ public class EleveController {
         }
     }
 
- //   @PutMapping("/{matricule}")
+//    @PutMapping("/{matricule}")
 //    public ResponseEntity<EleveDto> updateEleveByMatricule(
 //            @PathVariable String matricule,
 //            @RequestBody EleveDto eleveDto) {
@@ -80,7 +80,20 @@ public class EleveController {
 //        return ResponseEntity.ok(updatedEleve);
 //    }
 
-    @GetMapping("/getByMatricule/{matricule}")
+        // PUT: Mettre à jour un élève par son matricule
+    @PutMapping("/{matricule}")
+    public ResponseEntity<Eleve> updateEleveByMatricule(
+            @PathVariable String matricule,
+            @RequestBody Eleve updatedEleve) {
+        try {
+            Eleve updated = eleveService.updateEleveByMatricule(matricule, updatedEleve);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/getIdByMatricule/{matricule}")
     public ResponseEntity<EleveDto> getEleveByMatricule(@PathVariable String matricule) {
         EleveDto eleveDto = eleveService.getEleveByMatricule(matricule);
         return ResponseEntity.ok(eleveDto);

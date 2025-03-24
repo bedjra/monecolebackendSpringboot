@@ -191,6 +191,85 @@ public class EleveService {
 //        return convertToDto(updatedEleve);
 //    }
 
+
+
+        public Eleve updateEleveByMatricule(String matricule, Eleve updatedEleve) {
+        Optional<Eleve> existingEleveOpt = eleveRepository.findByEleveMatricule(matricule);
+
+        if (existingEleveOpt.isEmpty()) {
+            throw new RuntimeException("Élève introuvable avec le matricule : " + matricule);
+        }
+
+        Eleve eleve = existingEleveOpt.get();
+
+        // Vérifier si le niveau ou la spécialité a changé
+        boolean niveauChanged = !eleve.getNiveauEtude().equals(updatedEleve.getNiveauEtude());
+        boolean specialiteChanged = !eleve.getSpecialite().equals(updatedEleve.getSpecialite());
+
+        // Mettre à jour les informations de l'élève (sauf la date d'inscription)
+        eleve.setEleveNom(updatedEleve.getEleveNom());
+        eleve.setElevePrenom(updatedEleve.getElevePrenom());
+        eleve.setEleveAdresse(updatedEleve.getEleveAdresse());
+        eleve.setEleveSexe(updatedEleve.getEleveSexe());
+        eleve.setEleveDateNaiss(updatedEleve.getEleveDateNaiss());
+        eleve.setEleveEtatProvenance(updatedEleve.getEleveEtatProvenance());
+        eleve.setEleveLieuNais(updatedEleve.getEleveLieuNais());
+
+        // Ne pas modifier la date d'inscription
+        // eleve.setEleveDateIns(eleve.getEleveDateIns());  // Pas nécessaire, la valeur est conservée.
+
+        // Mise à jour du niveau et de la spécialité
+        eleve.setNiveauEtude(updatedEleve.getNiveauEtude());
+        eleve.setSpecialite(updatedEleve.getSpecialite());
+
+        // Si le niveau ou la spécialité a changé, mettre à jour la scolarité et recalculer le paiement
+        if (niveauChanged || specialiteChanged) {
+            // Trouver la nouvelle scolarité
+            Optional<Scolarite> scolariteOpt = scolariteRepository.findByNiveauAndSpecialite(
+                    updatedEleve.getNiveauEtude(), updatedEleve.getSpecialite()
+            );
+
+            if (scolariteOpt.isEmpty()) {
+                throw new RuntimeException("Aucune scolarité trouvée pour ce niveau et cette spécialité.");
+            }
+
+            Scolarite scolarite = scolariteOpt.get();
+
+            // Régénérer le matricule
+            String newMatricule = generateMatricule(eleve);
+            eleve.setEleveMatricule(newMatricule);
+
+            // Mettre à jour le paiement
+            Optional<Paiement> paiementOpt = paiementRepository.findByEleve(eleve);
+            if (paiementOpt.isPresent()) {
+                Paiement paiement = paiementOpt.get();
+                paiement.setScolarite(scolarite);
+                paiement.setNiveau(updatedEleve.getNiveauEtude());
+                paiement.setSpecialite(updatedEleve.getSpecialite());
+                paiement.setResteEcolage(scolarite.getMontant() - paiement.getMontantDejaPaye());
+
+                paiementRepository.save(paiement);
+            } else {
+                // Créer un nouveau paiement si aucun n'existe
+                Paiement paiement = new Paiement();
+                paiement.setEleve(eleve);
+                paiement.setScolarite(scolarite);
+                paiement.setNiveau(updatedEleve.getNiveauEtude());
+                paiement.setSpecialite(updatedEleve.getSpecialite());
+                paiement.setMontantDejaPaye(0.0);
+                paiement.setResteEcolage(scolarite.getMontant());
+                paiement.setMontantActuel(0.0);
+                paiement.setDatePaiement(LocalDate.now());
+
+                paiementRepository.save(paiement);
+            }
+        }
+
+        // Sauvegarde de l'élève mis à jour
+        return eleveRepository.save(eleve);
+    }
+
+
     public EleveDto getEleveByMatricule(String matricule) {
         Eleve eleve = eleveRepository.findByEleveMatricule(matricule)
                 .orElseThrow(() -> new RuntimeException("Aucun élève trouvé avec le matricule : " + matricule));
