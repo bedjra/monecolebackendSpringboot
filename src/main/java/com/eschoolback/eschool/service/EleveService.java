@@ -11,6 +11,7 @@ import com.eschoolback.eschool.repository.EleveRepository;
 import com.eschoolback.eschool.repository.PaiementRepository;
 import com.eschoolback.eschool.repository.ScolariteRepository;
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -131,6 +132,61 @@ public class EleveService {
 
         // Retourner un EleveDto
         return convertToDto(savedEleve);
+    }
+
+
+    public EleveDto updateEleveByMatricule(String matricule, EleveDto updatedEleveDto) {
+        // Vérifier si l'élève existe
+        Eleve eleve = eleveRepository.findByEleveMatricule(matricule)
+                .orElseThrow(() -> new EntityNotFoundException("Aucun élève trouvé avec le matricule : " + matricule));
+
+        // Mettre à jour les champs de l'élève
+        eleve.setEleveNom(updatedEleveDto.getEleveNom());
+        eleve.setElevePrenom(updatedEleveDto.getElevePrenom());
+        eleve.setEleveAdresse(updatedEleveDto.getEleveAdresse());
+        eleve.setEleveDateNaiss(updatedEleveDto.getEleveDateNaiss());
+        eleve.setEleveLieuNais(updatedEleveDto.getEleveLieuNais());
+        eleve.setEleveSexe(updatedEleveDto.getEleveSexe());
+        eleve.setEleveEtatProvenance(updatedEleveDto.getEleveEtatProvenance());
+        eleve.setTuteurNom(updatedEleveDto.getTuteurNom());
+        eleve.setTuteurPrenom(updatedEleveDto.getTuteurPrenom());
+        eleve.setTuteurProfession(updatedEleveDto.getTuteurProfession());
+        eleve.setTuteurAdresse(updatedEleveDto.getTuteurAdresse());
+        eleve.setTuteurTelDom(updatedEleveDto.getTuteurTelDom());
+        eleve.setTuteurCel(updatedEleveDto.getTuteurCel());
+
+        // Vérifier si le niveau ou la spécialité ont changé
+        if (!eleve.getNiveauEtude().equals(updatedEleveDto.getNiveauEtude()) ||
+                !eleve.getSpecialite().equals(updatedEleveDto.getSpecialite())) {
+
+            // Vérifier l'existence d'une scolarité correspondante
+            Scolarite scolarite = scolariteRepository.findByNiveauAndSpecialite(
+                            updatedEleveDto.getNiveauEtude(), updatedEleveDto.getSpecialite())
+                    .orElseThrow(() -> new RuntimeException("Aucune scolarité trouvée pour cette spécialité et ce niveau."));
+
+            // Mettre à jour le niveau et la spécialité de l'élève
+            eleve.setNiveauEtude(updatedEleveDto.getNiveauEtude());
+            eleve.setSpecialite(updatedEleveDto.getSpecialite());
+
+            // Générer un nouveau matricule
+            eleve.setEleveMatricule(generateMatricule(eleve));
+
+            // Mettre à jour les informations de paiement
+            Paiement paiement = paiementRepository.findByEleve(eleve)
+                    .orElseThrow(() -> new RuntimeException("Aucun paiement trouvé pour cet élève."));
+
+            paiement.setNiveau(updatedEleveDto.getNiveauEtude());
+            paiement.setSpecialite(updatedEleveDto.getSpecialite());
+            paiement.setScolarite(scolarite);
+            paiement.setResteEcolage(scolarite.getMontant() - paiement.getMontantDejaPaye());
+            paiementRepository.save(paiement);
+        }
+
+        // Sauvegarde de l'élève mis à jour
+        Eleve updatedEleve = eleveRepository.save(eleve);
+
+        // Retourner un EleveDto mis à jour
+        return convertToDto(updatedEleve);
     }
 
 //    public EleveDto updateEleveByMatricule(String matricule, EleveDto updatedEleveDto) {
