@@ -5,6 +5,8 @@ import com.eschoolback.eschool.enums.NiveauEtude;
 import com.eschoolback.eschool.enums.Specialite;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 
 @Entity
 public class Coefficient {
@@ -21,6 +23,10 @@ public class Coefficient {
 
     private String matiere;
     private double coefficient;
+
+
+    @OneToMany(mappedBy = "coefficient", cascade = CascadeType.ALL)
+    private List<Note> note;
 
     // Constructeurs
     public Coefficient() {}

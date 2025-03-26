@@ -57,4 +57,9 @@ public class PaiementController {
         }
     }
 
+    @GetMapping("/reste")
+    public List<PaiementDto> getPaiementsNonSoldes(@RequestParam NiveauEtude niveau, @RequestParam Specialite specialite) {
+        return paiementService.getPaiementsNonSoldes(niveau, specialite);
+    }
+
 }

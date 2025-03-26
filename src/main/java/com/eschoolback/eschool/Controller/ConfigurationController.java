@@ -5,6 +5,7 @@ package com.eschoolback.eschool.Controller;
 import com.eschoolback.eschool.Entity.Configuration;
 import com.eschoolback.eschool.service.ConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +37,7 @@ public class ConfigurationController {
         return configurationService.getAllConfigurations();
     }
 
+
     // Récupérer une configuration par ID
 //    @GetMapping
 //    public ResponseEntity<Configuration> getConfigurationById(@PathVariable Long id) {
@@ -48,5 +50,19 @@ public class ConfigurationController {
     public ResponseEntity<Void> deleteConfiguration(@PathVariable Long id) {
         configurationService.deleteConfiguration(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/image")
+    public ResponseEntity<byte[]> getImage() {
+        byte[] image = configurationService.getImage();
+
+        if (image == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "image/png"); // Modifier selon le format réel de l'image (ex: image/jpeg)
+
+        return new ResponseEntity<>(image, headers, HttpStatus.OK);
     }
 }

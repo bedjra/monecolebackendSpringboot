@@ -37,6 +37,7 @@ public class PaiementService {
                 .collect(Collectors.toList());
     }
 
+
     private PaiementDto convertToPaiementDto(Paiement paiement) {
         return new PaiementDto(
                 paiement.getEleve().getId(),
@@ -176,6 +177,18 @@ public class PaiementService {
                 paiement.getMontantDejaPaye().longValue()
         );
     }
+
+    
+
+    public List<PaiementDto> getPaiementsNonSoldes(NiveauEtude niveau, Specialite specialite) {
+        List<Paiement> paiements = paiementRepository.findByNiveauAndSpecialiteAndResteEcolageGreaterThan(niveau, specialite, 0.0);
+
+        return paiements.stream()
+                .map(this::convertToPaiementDto)
+                .collect(Collectors.toList());
+    }
+
+
 }
 
 

@@ -33,4 +33,9 @@ public class ConfigurationService {
     public void deleteConfiguration(Long id) {
         configurationRepository.deleteById(id);
     }
+
+    public byte[] getImage() {
+        return configurationRepository.findImage();
+    }
+
 }

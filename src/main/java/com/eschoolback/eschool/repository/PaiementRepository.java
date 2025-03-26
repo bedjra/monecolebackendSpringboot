@@ -18,4 +18,8 @@ public interface PaiementRepository extends JpaRepository<Paiement, Long> {
 
     @Query("SELECT DISTINCT p.niveau FROM Paiement p")
     List<NiveauEtude> findDistinctNiveaux();
+
+
+    // Récupérer seulement ceux avec un reste d'écolage > 0
+    List<Paiement> findByNiveauAndSpecialiteAndResteEcolageGreaterThan(NiveauEtude niveau, Specialite specialite, Double resteEcolage);
 }
